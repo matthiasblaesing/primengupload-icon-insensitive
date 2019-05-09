@@ -1,20 +1,46 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
+<h1>Testcase for FileUpload Icon not clickable</h1>
+<p>
+    It is expected, that the icon in the "Choose" Button is clickable. It is
+    observed though, that you can click on the text and the file chooser will
+    open, but you can not click on the "plus" icon. The button looks as if it
+    worked, but the file chooser does not open.
+</p>
+<p>
+    The behaviour can  be observed in the major browsers:
+</p>
 <ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
+    <li>Firefox</li>
+    <li>Chrome</li>
+    <li>Edge</li>
+    <li>Internet Explorer</li>
 </ul>
-
+<p>
+    Analysis
+</p>
+<ul>
+    <li>
+        The file upload component relies on the native <code>&lt;input type="file"&gt;</code>
+        element.
+    </li>
+    <li>
+        This file element is configured via CSS to fill the whole "Choose" button.
+        The icon realized with a span and the icon description too.
+    </li>
+    <li>
+        The file element is configured as <code>position = absolute</code>.
+    </li>
+    <li>
+        <strong>Problem</strong>: In theory this means, that the file element is placed above all other
+        elements. The problem is, that the icon-span is also <code>position = absolute</code>
+        and the icon is placed <strong>after</strong> the file input. So in the
+        natural order it is place above the icon-span.
+    </li>
+    <li>
+        <strong>Solution</strong>: The file upload button already spans its own
+        stacking context (it is <code>position = relative</code>), so use a z-index
+        to ensure the file input is above the other elements.
+</ul>
+<p-fileUpload
+    mode="advanced"
+    >
+</p-fileUpload>
